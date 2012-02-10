@@ -1,6 +1,8 @@
 #ifndef SHOOTER_H
 #define SHOOTER_H
 
+#include <WPILib.h>
+
 class Shooter
 {
 public:
@@ -8,8 +10,13 @@ public:
 	~Shooter();
 	
 	void SetTurret(double direction);
-	void Shoot(double distance, double spin = 0.0);
+	void Shoot(double speed, double spin = 0.0);
+	void ShootBasket(double distance, int level);
 	void Update();
+	
+private:
+	Jaguar* bottomJag;
+	Jaguar* topJag;
 };
 
 #endif // SHOOTER_H
