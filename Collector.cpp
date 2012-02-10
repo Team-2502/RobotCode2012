@@ -31,15 +31,6 @@ void Collector::ManipulateRamp()
 	center->Set(0);
 }
 
-void Collector::GotIR()
-{
-	this->balls++;
-	if (balls > 3) {
-		// Problem
-		// Needs to be programmed to eject
-	}
-}
-
 // Turn off everything
 void Collector::Stop()
 {
