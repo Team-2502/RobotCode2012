@@ -10,10 +10,11 @@ class LSM303_I2C : public SensorBase
 private:
 	static const UINT8 accelAddressR = 0x18;
 	static const UINT8 accelAddressW = 0x18;
+	static const UINT8 magAddress    = 0x3D;
+	
 	static const UINT8 accelPowerOn = 0x27; //001,10,111
 	static const UINT8 accelData    = 0x40;
 	
-	static const UINT8 magAddress    = 0x3D;
 	static const UINT8 magSpeed      = 0x14;
 	static const UINT8 magContinuous = 0x00;
 	

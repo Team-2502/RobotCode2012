@@ -24,19 +24,23 @@ using std::tan;
  */
 static double GetShootVelocity(double distance, double elevation, double shootAngle, double basketRadius, double ballRadius)
 {
-	static double g = 32.0;
-	double impactAngle = atan( tan(shootAngle) - (2 * elevation) / distance;
-	double variance = basketRadius - (ballRadius / sin(degToRad(impactAngle)));
-	double velocity = sqrt( (g * pow(distance + variance, 2.0)) / (2.0 * (distance + variance) * sin(shootAngle) * cos(shootAngle) - elevation * pow(cos(shootAngle) , 2.0) ) );
-	return velocity;
+	static double rootG = sqrt(32.0);
+	static double sinAngle = sin(2 * shootAngle);
+	static double cosAngle = cos(2 * shootAngle);
+	static double tanAngle = tan(shootAngle);
+	//double impactAngle = atan( tan(shootAngle) - (2 * elevation) / distance);
+	double impactAngle = atan( tanAngle - 2 * elevation / distance );
+	double variance = basketRadius - (ballRadius / sin(impactAngle));
+	//double velocity = sqrt( (g * pow(distance + variance, 2.0)) / (2.0 * (distance + variance) * sin(shootAngle) * cos(shootAngle) - elevation * pow(cos(shootAngle) , 2.0) ) );
+	return rootG * fabs(distance + variance)/ sqrt(fabs(cosAngle*elevation+elevation-sinAngle*distance-variance*sinAngle));
 }
 
 Shooter::Shooter()
 {
 	Singleton<Logger>::GetInstance().Logf("Shooter: Starting up...");
 	//Setup Jaguars
-	this->topJag = new Jaguar(SHOOTER_TOP_JAG_SLOT, SHOOTER_TOP_JAG_CHANNEL);
-	this->bottomJag = new Jaguar(SHOOTER_BOTTOM_JAG_SLOT, SHOOTER_BOTTOM_JAG_CHANNEL);
+	this->topJag = new Jaguar(DIGITAL_SIDECAR_SLOT, SHOOTER_TOP_JAG_CHANNEL);
+	this->bottomJag = new Jaguar(DIGITAL_SIDECAR_SLOT, SHOOTER_BOTTOM_JAG_CHANNEL);
 }
 
 Shooter::~Shooter()
@@ -46,17 +50,17 @@ Shooter::~Shooter()
 	delete this->bottomJag;
 }
 
-void Shooter::Shoot(double speed, double spin)
+void Shooter::Shoot(double speed)
 {
-	///\todo add spin
-	Logger::GetInstance().Logf("Shooting a ball with speed [%f ft/s] and spin [%f Hz]", speed, spin);
+	Singleton<Logger>::GetInstance().Logf("Shooting a ball with speed [%f ft/s] and spin [%f Hz]", speed, 0.0);
+	///\todo Check inversion.
 	this->topJag->Set(-1.0 * speed / MAX_SHOOTER_SPEED);
-	this->bottomJag->set(speed / MAX_SHOOTER_SPEED);
+	this->bottomJag->Set(speed / MAX_SHOOTER_SPEED);
 }
 
 void Shooter::ShootBasket(double distance, int level)
 {
-	Logger::GetInstance().Logf("Shooting a basket at distance [%f ft] at level [%d]", distance, level);
+	Singleton<Logger>::GetInstance().Logf("Shooting a basket at distance [%f ft] at level [%d]", distance, level);
 	
 	//Calculate the ideal velocity
 	double basketElevation;
@@ -80,6 +84,5 @@ void Shooter::ShootBasket(double distance, int level)
 	double elevation = SHOOTER_ELEVATION - basketElevation;
 	double velocity = GetShootVelocity(distance, elevation, SHOOTER_ANGLE, BASKET_RADIUS, BALL_RADIUS);
 	
-	//Shoot with a 3 Hz Backspin
-	Shoot(velocity, -3.0);
+	Shoot(velocity);
 }

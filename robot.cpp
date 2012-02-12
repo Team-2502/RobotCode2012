@@ -10,29 +10,29 @@
 Robot::Robot()
 {
 	Logger* logger = new Logger("/ni-rt/system/logs/robot.txt");
-	vs = new VisionSystem(new SquareFinder);
-	vs->start();
+	//vs = new VisionSystem(new SquareFinder);
+	//vs->start();
 	Singleton<Display>::SetInstance(new Display);
 	Singleton<Logger>::SetInstance(logger);
 	Singleton<DriveTrain>::SetInstance(new DriveTrain);
 	Singleton<Logger>::GetInstance().Logf("Starting the Robot class.");
 
-	accel = new ADXL345_PID(1);
-	lsm = 0;//= new LSM303_I2C(1);
+	//accel = 0;//new ADXL345_PID(1);
+	//lsm = new LSM303_I2C(1);
+
+	//	pid = new PIDController(0.7,.1,.1,accel,&Singleton<DriveTrain>::GetInstance());
+
+	//gyro = new Gyro(1);
+	//gyro->Reset();
 	
-//	pid = new PIDController(0.7,.1,.1,accel,&Singleton<DriveTrain>::GetInstance());
-
-	gyro = new Gyro(1);
-	gyro->Reset();
-
 	joystick1 = new JoystickWrapper(1, Extreme3DPro);
-	joystick2 = new JoystickWrapper(2, Attack3);
+	//joystick2 = new JoystickWrapper(2, Attack3);
 	jc = new JoystickCallback<Robot>(joystick1,this);
 	jc->SetUpCallback(9,GET_FUNC(toggleDiagnosticMode));
 
 	inDiagnosticMode = false;
-	showAccel = true;
-
+	showAccel = false;
+	
 	GetWatchdog().SetEnabled(false);
 }
 
@@ -72,23 +72,20 @@ void Robot::OperatorControl()
 	while(IsOperatorControl())
 	{
 		if(!inDiagnosticMode) {
-//			pid->SetSetpoint(0.0);
-			
+			//			pid->SetSetpoint(0.0);
+
 			float x, y;
 			float z;
 			joystick1->GetRawAxis(&x,&y);
 			z = joystick1->GetRawRotation();
-			float y2;
-			joystick2->GetRawAxis(&x,&y2);
+			//float y2;
+			//joystick2->GetRawAxis(&x,&y2);
 			// This will disable drive train
 			// should not be included in final product
+			/*
 			if (joystick1->GetButton(7)) {
 				if (last_switch_type > 0) {
-					if (driveTrain.run == true) {
-						driveTrain.run = false;
-					} else {
-						driveTrain.run = true;
-					}
+					driveTrain.run = !driveTrain.run;
 					last_switch_type = time(NULL);
 				}
 			}
@@ -105,45 +102,53 @@ void Robot::OperatorControl()
 					}
 				}
 			}
+			*/
 
+			driveTrain.DriveArcade(-z, y);
 			Singleton<Display>::GetInstance().Clear();
+			Singleton<Display>::GetInstance().PrintfLine(0, "%f", z);
+			Singleton<Display>::GetInstance().PrintfLine(1, "%f", y);
 			//Singleton<Display>::GetInstance().PrintfLine(0, "JoyX: %1.5f", x);
 			//Singleton<Display>::GetInstance().PrintfLine(1, "JoyZ: %1.5f", z);
 
+			/*
 			TargetReport tr = vs->getBestTarget();
 			if(showAccel) {
-				accelX = accel->GetAcceleration(ADXL345_I2C::kAxis_X);
-				accelY = accel->GetAcceleration(ADXL345_I2C::kAxis_Y);
-				accelZ = accel->GetAcceleration(ADXL345_I2C::kAxis_Z);
+				//accelX = accel->GetAcceleration(ADXL345_I2C::kAxis_X);
+				//accelY = accel->GetAcceleration(ADXL345_I2C::kAxis_Y);
+				//accelZ = accel->GetAcceleration(ADXL345_I2C::kAxis_Z);
 			} else {
 				accelX = lsm->GetAccelerations().XAxis;
 				accelY = lsm->GetAccelerations().YAxis;
 				accelZ = lsm->GetAccelerations().ZAxis;
 			}
 
-			Singleton<Display>::GetInstance().PrintfLine(2,"Vis: (%1.2f,%1.2f)",tr.x,tr.y);
+			Singleton<Display>::GetInstance().PrintfLine(2,"Vis: (%1.2f,%1.2f)",tr.normalized_x,tr.normalized_y);
 			if(showAccel) {
 				Singleton<Display>::GetInstance().PrintfLine(3, "X_a: %f", accelX);
 				Singleton<Display>::GetInstance().PrintfLine(4, "Y_a: %f", accelY);
-				Singleton<Display>::GetInstance().PrintfLine(5, "Deg: %f", accel->PIDGet());
+				//Singleton<Display>::GetInstance().PrintfLine(5, "Deg: %f", accel->PIDGet());
 			} else {
 				Singleton<Display>::GetInstance().PrintfLine(3, "X_m: %f", accelX);
 				Singleton<Display>::GetInstance().PrintfLine(4, "Y_m: %f", accelY);
 				Singleton<Display>::GetInstance().PrintfLine(5, "Z_m: %f", accelZ);
 			}
+			*/
 
 			//float speed = 0.5*tr.normalized_x; //Scale to range. [-1,0,1] : [left,center,right]
 			//driveTrain.DriveTank( speed, -speed );
+			/*
 			if (driveTrain.CurrentDrive() == TankDrive) {
 				//Singleton<Display>::GetInstance().PrintfLine(0, "Currently: TankDrive");
 				driveTrain.DriveTank( y, y2);
 			} else {
 				//Singleton<Display>::GetInstance().PrintfLine(0, "Currently: ArcadeDrive");
 				driveTrain.DriveArcade(z, y);
-			}
+			}*/
 			Wait(0.01);
 		} 
 		else {
+			/*
 			Singleton<Display>::GetInstance().Clear();
 			Singleton<Display>::GetInstance().PrintfLine(0,"[Diagnostic Mode]");
 			Singleton<Display>::GetInstance().PrintfLine(1,"2) Show LSM303 outs");
@@ -151,7 +156,9 @@ void Robot::OperatorControl()
 			Singleton<Display>::GetInstance().PrintfLine(3,"");
 			Singleton<Display>::GetInstance().PrintfLine(4,"9) Exit");
 			Singleton<Display>::GetInstance().PrintfLine(5,"");
+			*/
 		}
+		
 		jc->Update();
 		Singleton<Display>::GetInstance().Update();
 		Wait(0.01);

@@ -25,7 +25,7 @@ public:
 	/**
 	 * Destructor.
 	 */
-	~DriveTrain();
+	virtual ~DriveTrain();
 	
 	void PIDWrite(float output) { DriveTank(output,output); }
 	

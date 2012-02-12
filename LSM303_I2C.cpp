@@ -37,6 +37,8 @@ LSM303_I2C::AxesReport LSM303_I2C::GetAccelerations()
 
 	AxesReport data;
 	UINT8 ACC_Data[6];
+	
+	UINT8 ctrl = 0;
 
 	accelI2C_r->Read(OUT_X_L_A,1,ACC_Data+0);
 	accelI2C_r->Read(OUT_X_H_A,1,ACC_Data+1);
@@ -44,6 +46,16 @@ LSM303_I2C::AxesReport LSM303_I2C::GetAccelerations()
 	accelI2C_r->Read(OUT_Y_H_A,1,ACC_Data+3);
 	accelI2C_r->Read(OUT_Z_L_A,1,ACC_Data+4);
 	accelI2C_r->Read(OUT_Z_H_A,1,ACC_Data+5);
+	
+	/*printf("I2C read at address: %x, ptr: %p\n",accelAddressR,accelI2C_r);
+	printf("I2C write at address: %x, ptr: %p\n",accelAddressW,accelI2C_w);
+	printf("OUT_X_L_A: %x\n",*(ACC_Data+0));
+	printf("OUT_X_H_A: %x\n",*(ACC_Data+1));
+	printf("OUT_Y_L_A: %x\n",*(ACC_Data+2));
+	printf("OUT_Y_H_A: %x\n",*(ACC_Data+3));
+	printf("OUT_Z_L_A: %x\n",*(ACC_Data+4));
+	printf("OUT_Z_H_A: %x\n",*(ACC_Data+5));
+	printf("Control Register: %x\n",ctrl);*/
 
 	int rawX, rawY, rawZ;
 

@@ -15,11 +15,7 @@ static const double PI = 4.0 * std::atan(1.0); /**< Pi. */
  * \param degrees the angle (in degrees).
  * \return the angle (in radians).
  */
-
-/*double degToRad(double degrees)
-{
-	return degrees * PI / 180.0;
-}*/
+double degToRad(double degrees);
 
 /**
  * Convert radians to degrees.
@@ -27,10 +23,7 @@ static const double PI = 4.0 * std::atan(1.0); /**< Pi. */
  * \param radians the angle (in radians).
  * \return the angle (in degrees).
  */
-/*double radToDeg(double radians)
-{
-	return radians * 180.0 / PI;
-}*/
+double radToDeg(double radians);
 
 /**
  * Rotate a coordinate by an angle.
@@ -41,11 +34,6 @@ static const double PI = 4.0 * std::atan(1.0); /**< Pi. */
  * \param rx the rotated x coordinate.
  * \param ry the rotated y coordinate.
  */
-/*void rotate(double x, double y, double angle, double* rx, double* ry)
-{
-	angle = degToRad(angle);
-	*rx = x * std::cos(angle) - y * std::sin(angle);
-	*ry = x * std::sin(angle) + y * std::cos(angle);
-}*/
+void rotate(double x, double y, double angle, double* rx, double* ry);
 
 #endif // MATH_H

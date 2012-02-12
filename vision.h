@@ -9,8 +9,12 @@ struct TargetReport {
 	double x;
 	double y;
 	double size;
-	double normalized_x;
-	double normalized_y;
+	double normalized_x; //units of Joystick plane
+	double normalized_y; //units of Joystick plane
+	double distance; //ft
+	bool operator<(TargetReport &rhs) {
+		return size < rhs.size;
+	}
 };
 
 class VisionSpecifics

@@ -11,11 +11,10 @@ public:
 	
 	void Shoot();
 	void ManipulateRamp();
-	int GetNumberOfBalls();
+	void GotIR();
 	void Stop();
 	void Eject();
 	void RunCollector();
-	void Update();
 	
 private:
 	int balls;

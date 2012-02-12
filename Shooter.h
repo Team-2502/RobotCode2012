@@ -10,7 +10,7 @@ public:
 	~Shooter();
 	
 	void SetTurret(double direction);
-	void Shoot(double speed, double spin = 0.0);
+	void Shoot(double speed);
 	void ShootBasket(double distance, int level);
 	void Update();
 	
