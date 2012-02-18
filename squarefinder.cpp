@@ -14,9 +14,11 @@ SquareFinder::~SquareFinder()
 	imaqDispose(lumPlane);
 }
 
-TargetReport SquareFinder::getBestTarget(HSLImage *img)
+TargetReport SquareFinder::getBestTarget(HSLImage *img, int& count)
 {
-	TargetReport ret2;
+    count = 0;
+    TargetReport* reportsArray = new TargetReport[4];
+	TargetReport& ret2 = reportsArray[0];
 	ret2.x = 1337.0; //error code
 	ret2.y = 0;
 	if(!img)
@@ -78,20 +80,15 @@ TargetReport SquareFinder::getBestTarget(HSLImage *img)
 	}
 	sort(reports.begin(),reports.end());
 
-	/*
-	printf("Target report(%i particles):\n",reports.size());
-	for(unsigned int i = 0; i < reports.size(); i++) {
-		printf("\tTarget %i:\n",i);
-		printf("\t\tX: %f\n",reports.at(i).x);
-		printf("\t\tY: %f\n",reports.at(i).y);
-		printf("\t\tWidth: %f\n",reports.at(i).width);
-		printf("\t\tHeight: %f\n",reports.at(i).height);
-		printf("\t\tArea: %f\n",reports.at(i).size);
-		printf("\t\tDistance: %f\n",reports.at(i).distance);
-	}
-	 */
-
 	if(reports.size())
-		ret2 = reports.at(0);
-	return ret2;
+    {
+        count = reports.size() >= 4 ? 4 : reports.size();
+        unsigned i = 0;
+        for(vector<TargetReport>::iterator it = reportsArray.begin(); it != reportsArray.end(); ++it)
+        {
+            reportsArray[i++] = (*it);
+        }
+    }
+	return reportsArray;
 }
+

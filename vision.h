@@ -21,7 +21,7 @@ class VisionSpecifics
 {
 public:
 	virtual ~VisionSpecifics() {}
-	virtual TargetReport getBestTarget(HSLImage * img) = 0;
+	virtual TargetReport* getBestTargets(HSLImage * img, int& count) = 0;
 };
 
 class VisionSystem
@@ -33,16 +33,19 @@ public:
 	void start();
 	void stop();
 	
-	TargetReport getBestTarget() const { return bestTarget; }
+	TargetReport* getBestTargets() const {return bestTargets;}
+    int getBestTargetCount() const {return bestTargetCount;}
 	double getTargetHeadingX();
 	
 private:
 	static void loop();
 	Task *visionTask;
 	
-	static TargetReport bestTarget;
+    static int bestTargetCount;
+	static TargetReport bestTargets[4];
 	static AxisCamera *cam;
 	static VisionSpecifics *engine;
 };
 
 #endif
+

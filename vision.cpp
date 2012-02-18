@@ -5,9 +5,10 @@
 #include "Singleton.h"
 #include "Display.h"
 
-TargetReport VisionSystem::bestTarget = TargetReport();
+TargetReport* VisionSystem::bestTargets = 0;
 AxisCamera *VisionSystem::cam = NULL;
 VisionSpecifics *VisionSystem::engine = NULL;
+int VisionSystem::bestTargetCount = 0;
 
 VisionSystem::VisionSystem(VisionSpecifics *backend)
 {
@@ -41,7 +42,8 @@ void VisionSystem::loop()
 	{
 		HSLImage *cap = new HSLImage;
 		cam->GetImage(cap);
-		bestTarget = engine->getBestTarget(cap);
+        delete [] bestTargets;
+		bestTargets = engine->getBestTargets(cap, bestTargetCount);
 		delete cap;
 		Wait(0.01);
 	}
