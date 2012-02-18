@@ -3,7 +3,8 @@
 
 #include "WPILib.h"
 
-struct TargetReport {
+struct TargetReport 
+{
 	double width;
 	double height;
 	double x;
@@ -11,17 +12,17 @@ struct TargetReport {
 	double size;
 	double normalized_x; //units of Joystick plane
 	double normalized_y; //units of Joystick plane
+	double normalizedWidth;
+	double normalizedHeight;
 	double distance; //ft
-	bool operator<(TargetReport &rhs) {
-		return size < rhs.size;
-	}
+	bool operator<(TargetReport &rhs) {return size < rhs.size;}
 };
 
 class VisionSpecifics
 {
 public:
 	virtual ~VisionSpecifics() {}
-	virtual void getBestTargets(HSLImage * img, TargetReport* targets, int& count) = 0;
+	virtual void GetBestTargets(HSLImage * img, TargetReport* targets, int& count) = 0;
 };
 
 class VisionSystem
@@ -40,20 +41,18 @@ public:
      * \param distance the distance to the target.
      * \param targetLevel the height level of the target.
      */
-    void findTarget(double& offset, double& distance, int& targetLevel);
-
-	TargetReport* getBestTargets() const {return bestTargets;}
-    int getBestTargetCount() const {return bestTargetCount;}
-	double getTargetHeadingX();
+    void FindTarget(double& offset, double& distance, int& targetLevel);
 	
 private:
 	static void loop();
-	Task *visionTask;
+    bool* GetTargetCase(TargetReport* targets, int targetCount);
+	
+	Task* visionTask;
 	
     static int bestTargetCount;
 	static TargetReport bestTargets[4];
-	static AxisCamera *cam;
-	static VisionSpecifics *engine;
+	static AxisCamera* cam;
+	static VisionSpecifics* engine;
 };
 
 #endif

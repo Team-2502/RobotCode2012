@@ -14,7 +14,7 @@ SquareFinder::~SquareFinder()
 	imaqDispose(lumPlane);
 }
 
-void SquareFinder::getBestTargets(HSLImage *img, TargetReport* targets, int& count)
+void SquareFinder::GetBestTargets(HSLImage *img, TargetReport* targets, int& count)
 {
     count = 0;
     TargetReport* reportsArray = targets;
@@ -74,6 +74,8 @@ void SquareFinder::getBestTargets(HSLImage *img, TargetReport* targets, int& cou
 					imaqMeasureParticle(image,i,FALSE,IMAQ_MT_BOUNDING_RECT_TOP,&ret.y);
 					ret.normalized_x = (-1.0+2.0*((ret.normalized_x)/width)); //Map to [-1.0,1.0]
 					ret.normalized_y = (-1.0+2.0*((ret.normalized_y)/height));
+					ret.normalizedWidth = (w / width);
+					ret.normalizedHeight = (h / height);
 					ret.distance = 732.7079220552562/w; //Approximates distance using lens optics.
 					reports.push_back(ret);
 				}
