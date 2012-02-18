@@ -9,12 +9,16 @@
 
 class VisionSystem;
 
-class ADXL345_PID : public ADXL345_I2C, PIDSource
+class AccelPID_Wrapper : public PIDSource
 {
 public:
-	ADXL345_PID(UINT8 moduleNumber, DataFormat_Range range=kRange_2G) : ADXL345_I2C(moduleNumber,range) { }
+	AccelPID_Wrapper(ADXL345_I2C *member) { internal = member; }
+	virtual ~AccelPID_Wrapper() { delete internal; }
 	
-	double PIDGet() { return atan2(GetAccelerations().YAxis,GetAccelerations().XAxis)-1.5; } //86 degrees is "down"
+	double PIDGet() { return atan2(internal->GetAccelerations().YAxis,internal->GetAccelerations().XAxis)-1.5; } //86 degrees is "down"
+	
+private:
+	ADXL345_I2C *internal;
 };
 
 /**
@@ -44,23 +48,21 @@ public:
 	void OperatorControl();
 	
 private:
-	void toggleDiagnosticMode();
-	void toggleAccel();
-	void runWheels();
-	void displayLSM();
+	void balanceRobotOff();
+	void balanceRobotOn();
 	
-	ADXL345_PID *accel;
-	LSM303_I2C *lsm;
+private:
+	enum ButtonMappings { BalanceRobot = 1 };
+	
+	AccelPID_Wrapper *accel;
 	VisionSystem *vs;
 	Gyro *gyro;
-	bool inDiagnosticMode;
-	bool showAccel;
 	
 	PIDController *pid;
 	
+	JoystickCallback<Robot> *jc;
 	JoystickWrapper *joystick1;
 	JoystickWrapper *joystick2;
-	JoystickCallback<Robot> *jc;
 };
 
 #endif // ROBOT_H

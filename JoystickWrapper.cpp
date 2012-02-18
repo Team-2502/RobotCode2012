@@ -151,6 +151,5 @@ float JoystickWrapper::GetThrottle() const
  * Thought'd be useful
  */
 bool JoystickWrapper::GetButton(int buttonID) {
-	if (joystick->GetRawButton(buttonID)) return true;
-	return false;
+	return joystick->GetRawButton(buttonID);
 }

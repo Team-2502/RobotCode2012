@@ -84,7 +84,6 @@ public:
 	void SetSnapPoints(int snapPoints) {this->snapPoints = snapPoints;}
 	bool GetButton(int buttonID);
 	
-	
 private:
 	Joystick* joystick;
 	int snapPoints;

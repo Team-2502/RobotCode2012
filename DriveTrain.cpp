@@ -37,6 +37,56 @@ int round(float d, int pos = 1) {
 	return (int)floor(d);
 }
 
+void DriveTrain::DriveArcade(double x, double y) {
+	float exponentialL = 0;
+	if (y+x < 0) {
+		exponentialL = 0 - sqrt(0 - (y+x));
+	} else if (y+x == 0) {
+		exponentialL = 0;
+	} else {
+		exponentialL = sqrt(y+x);
+	}
+	float exponentialR = 0;
+	if (y-x < 0) {
+		exponentialR = 0 - sqrt(0 - (y-x));
+	} else if (y-x == 0) {
+		exponentialR = 0;
+	} else {
+		exponentialR = sqrt(y-x);
+	}
+	bool exponential = false;
+	if (exponential == true) {
+		if (run == true) {
+			Singleton<Display>::GetInstance().PrintfLine(0, "%f", y+x);
+			Singleton<Display>::GetInstance().PrintfLine(1, "%f", exponentialL);
+			left->Set(-(exponentialL));
+			right->Set(-(exponentialR));
+		}
+	} else {
+		if (run == true) {
+			left->Set(-(y+x));
+			right->Set(-(y-x));
+		}
+	}
+}
+
+void DriveTrain::DriveTank(double leftChannel, double rightChannel)
+{
+	if (run == true) {
+		left->Set(-leftChannel);
+		right->Set(-rightChannel);
+	}
+}
+
+DriveType DriveTrain::CurrentDrive() {
+	return this->type;
+}
+
+void DriveTrain::ChangeDrive(DriveType type) {
+	this->type = type;
+}
+
+/*
 void DriveTrain::DriveField(double x, double y, double gyro)
 {
 	float angle = 0.00;
@@ -58,7 +108,7 @@ void DriveTrain::DriveField(double x, double y, double gyro)
 	} else {
 		angle = 0;
 	}
-	/* Translate Gyro angle into human-readable form */
+	/* Translate Gyro angle into human-readable form *
 	if (gyro < 0) {
 		gyro = 0 - gyro;
 		gyro = 360 - gyro;
@@ -116,52 +166,4 @@ void DriveTrain::DriveField(double x, double y, double gyro)
 		}
 	}
 }
-
-void DriveTrain::DriveArcade(double x, double y) {
-	float exponentialL = 0;
-	if (y+x < 0) {
-		exponentialL = 0 - sqrt(0 - (y+x));
-	} else if (y+x == 0) {
-		exponentialL = 0;
-	} else {
-		exponentialL = sqrt(y+x);
-	}
-	float exponentialR = 0;
-	if (y-x < 0) {
-		exponentialR = 0 - sqrt(0 - (y-x));
-	} else if (y-x == 0) {
-		exponentialR = 0;
-	} else {
-		exponentialR = sqrt(y-x);
-	}
-	bool exponential = false;
-	if (exponential == true) {
-		if (run == true) {
-			Singleton<Display>::GetInstance().PrintfLine(0, "%f", y+x);
-			Singleton<Display>::GetInstance().PrintfLine(1, "%f", exponentialL);
-			left->Set(-(exponentialL));
-			right->Set(-(exponentialR));
-		}
-	} else {
-		if (run == true) {
-			left->Set(-(y+x));
-			right->Set(-(y-x));
-		}
-	}
-}
-
-void DriveTrain::DriveTank(double leftChannel, double rightChannel)
-{
-	if (run == true) {
-		left->Set(-leftChannel);
-		right->Set(-rightChannel);
-	}
-}
-
-DriveType DriveTrain::CurrentDrive() {
-	return this->type;
-}
-
-void DriveTrain::ChangeDrive(DriveType type) {
-	this->type = type;
-}
+*/

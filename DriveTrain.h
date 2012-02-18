@@ -29,7 +29,7 @@ public:
 	
 	void PIDWrite(float output) { DriveTank(output,output); }
 	
-	void DriveField(double x, double y, double gyro);
+	//void DriveField(double x, double y, double gyro); -- Removed because we're not using it
 	void DriveArcade(double x, double y);
 	
 	/**

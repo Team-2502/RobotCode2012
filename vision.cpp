@@ -34,6 +34,7 @@ void VisionSystem::start()
 void VisionSystem::stop()
 {
 	visionTask->Stop();
+
 }
 
 void VisionSystem::loop()
@@ -53,3 +54,11 @@ double VisionSystem::getTargetHeadingX()
 {
 	return bestTarget.normalized_x; 
 }
+
+void VisionSystem::findTarget(double& offset, double& distance, int& targetLevel)
+{
+    targetLevel = 0;
+    distance = 0.0;
+    offset = 0.0;
+}
+

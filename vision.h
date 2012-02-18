@@ -33,6 +33,15 @@ public:
 	void start();
 	void stop();
 	
+    /**
+     * Find the best target.
+     *
+     * \param offset the relative offset to the left or right of the camera.
+     * \param distance the distance to the target.
+     * \param targetLevel the height level of the target.
+     */
+    void findTarget(double& offset, double& distance, int& targetLevel);
+
 	TargetReport* getBestTargets() const {return bestTargets;}
     int getBestTargetCount() const {return bestTargetCount;}
 	double getTargetHeadingX();
