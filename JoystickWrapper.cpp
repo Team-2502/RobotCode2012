@@ -88,18 +88,25 @@ int JoystickWrapper::GetPovAngle() const
 
 void JoystickWrapper::GetAxis(float* xaxis, float* yaxis) const
 {
-	float angle = GetAngle();
+	//float angle = GetAngle();
 
 	//Calculate the angle that we will snap to:
-	angle = floor(angle/(360/snapPoints))*(360/snapPoints) * PI / 180;
+	//angle = floor(angle/(360/snapPoints))*(360/snapPoints) * PI / 180;
 
 	//Snap the magnitude to an exponential filter
-	float magnitude = this->joystick->GetMagnitude();
+	//float magnitude = this->joystick->GetMagnitude();
 	//magnitude = (pow(MAG_EXPONENTIAL,magnitude)-1)/(MAG_EXPONENTIAL-1);
 
 	//Create a new axis based on the new angle and the magnitude of the previous axis vector	
-	*xaxis = cos(angle) * magnitude;
-	*yaxis = sin(angle) * magnitude;
+	//*xaxis = cos(angle) * magnitude;
+	//*yaxis = sin(angle) * magnitude;
+	
+	GetRawAxis(xaxis,yaxis);
+	
+	*xaxis = *xaxis * *xaxis * *xaxis;
+	*yaxis = *yaxis * *yaxis * *yaxis;
+	//*xaxis = ((*xaxis < 0.0) ? -1.0 : 1.0) * (exp(fabs(*xaxis))-1)/(exp(1)-1.0);
+	//*yaxis = ((*yaxis < 0.0) ? -1.0 : 1.0) * (exp(fabs(*yaxis))-1)/(exp(1)-1.0);
 }
 
 void JoystickWrapper::GetRawAxis(float* xaxis, float* yaxis) const
@@ -110,10 +117,8 @@ void JoystickWrapper::GetRawAxis(float* xaxis, float* yaxis) const
 
 float JoystickWrapper::GetRotation() const
 {
-	float rotation=GetRawRotation();
-	//int sign = (rotation < 0) ? -1 : 1;
-	return rotation;
-	//return sign*(pow(ROT_EXPONENTIAL,rotation)-1)/(ROT_EXPONENTIAL-1);
+	float r = GetRawRotation();
+	return r*r*r;
 }
 
 float JoystickWrapper::GetRawRotation() const

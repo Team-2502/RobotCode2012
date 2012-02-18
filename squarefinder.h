@@ -9,7 +9,7 @@ public:
 	SquareFinder();
 	~SquareFinder();
 	
-	TargetReport* getBestTargets(HSLImage *img, int& count);
+	void getBestTargets(HSLImage *img, TargetReport* targets, int& count);
 	
 private:
 	Image *lumPlane;

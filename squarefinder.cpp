@@ -14,15 +14,17 @@ SquareFinder::~SquareFinder()
 	imaqDispose(lumPlane);
 }
 
-TargetReport SquareFinder::getBestTarget(HSLImage *img, int& count)
+void SquareFinder::getBestTargets(HSLImage *img, TargetReport* targets, int& count)
 {
     count = 0;
-    TargetReport* reportsArray = new TargetReport[4];
+    TargetReport* reportsArray = targets;
 	TargetReport& ret2 = reportsArray[0];
 	ret2.x = 1337.0; //error code
 	ret2.y = 0;
 	if(!img)
-		return ret2;
+	{
+		return;
+	}
 	ret2.x = 1338.0;
 
 	int height = img->GetHeight();
@@ -84,11 +86,10 @@ TargetReport SquareFinder::getBestTarget(HSLImage *img, int& count)
     {
         count = reports.size() >= 4 ? 4 : reports.size();
         unsigned i = 0;
-        for(vector<TargetReport>::iterator it = reportsArray.begin(); it != reportsArray.end(); ++it)
+        for(vector<TargetReport>::iterator it = reports.begin(); it != reports.end(); ++it)
         {
             reportsArray[i++] = (*it);
         }
     }
-	return reportsArray;
 }
 

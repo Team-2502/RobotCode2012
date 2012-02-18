@@ -20,6 +20,7 @@ enum CollectorState
 #define RUNFAST .5
 #define RUNSLOW .2
 #define STOP 0
+
 class Collector
 {
 public:

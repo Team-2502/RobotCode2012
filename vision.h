@@ -21,7 +21,7 @@ class VisionSpecifics
 {
 public:
 	virtual ~VisionSpecifics() {}
-	virtual TargetReport* getBestTargets(HSLImage * img, int& count) = 0;
+	virtual void getBestTargets(HSLImage * img, TargetReport* targets, int& count) = 0;
 };
 
 class VisionSystem

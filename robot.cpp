@@ -6,6 +6,7 @@
 #include "Singleton.h"
 #include "squarefinder.h"
 #include <time.h>
+#include "Sharp_IR.h"
 
 Robot::Robot()
 {
@@ -62,19 +63,22 @@ void Robot::OperatorControl()
 {
 	DriveTrain& driveTrain = Singleton<DriveTrain>::GetInstance();
 	Singleton<Logger>::GetInstance().Logf("Starting operator control.");
-
+	Sharp_IR *irTest = new Sharp_IR( 1, 5);
+	
 	while(IsOperatorControl())
 	{
 		float x, y, rot;
-		joystick1->GetRawAxis(&x,&y);
-		rot = joystick1->GetRawRotation();
+		joystick1->GetAxis(&x,&y);
+		rot = -joystick1->GetRawRotation();
 
-		driveTrain.DriveArcade(-rot*.7, y);
+		driveTrain.DriveArcade(rot, y);
 		Singleton<Display>::GetInstance().Clear();
+		
 		
 		Singleton<Display>::GetInstance().PrintfLine(0, "X: %f", x);
 		Singleton<Display>::GetInstance().PrintfLine(1, "Y: %f", y);
 		Singleton<Display>::GetInstance().PrintfLine(2, "R: %f", rot);
+		Singleton<Display>::GetInstance().PrintfLine(3, "Ball: %i", irTest->Get());
 		
 		//jc->Update();
 		Singleton<Display>::GetInstance().Update();

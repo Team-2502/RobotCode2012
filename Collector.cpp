@@ -1,6 +1,14 @@
 #include <WPILib.h>
 #include "Collector.h"
 
+int Collector::balls = 0;
+Victor *Collector::grabber = NULL;
+Victor *Collector::lifter = NULL;
+Sharp_IR *Collector::frontIR = NULL;
+Sharp_IR *Collector::middleIR = NULL;
+Sharp_IR *Collector::topIR = NULL;
+CollectorState Collector::collectorState = OFF;
+
 Collector::Collector(int bottomChannel, int middleChannel, int frontIRChannel, int middleIRChannel, int topIRChannel, int numberOfBalls )
 {
 	balls = numberOfBalls;
