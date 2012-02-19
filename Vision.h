@@ -25,11 +25,11 @@ public:
 	virtual void GetBestTargets(HSLImage * img, TargetReport* targets, int& count) = 0;
 };
 
-class VisionSystem
+class Vision
 {
 public:
-	VisionSystem(VisionSpecifics *backend);
-	~VisionSystem();
+	Vision(VisionSpecifics *backend);
+	~Vision();
 	
 	void start();
 	void stop();

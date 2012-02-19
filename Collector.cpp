@@ -4,22 +4,22 @@
 unsigned Collector::balls = 0;
 Victor *Collector::grabber = NULL;
 Victor *Collector::lifter = NULL;
-Sharp_IR *Collector::frontIR = NULL;
-Sharp_IR *Collector::middleIR = NULL;
-Sharp_IR *Collector::topIR = NULL;
+SharpIR *Collector::frontIR = NULL;
+SharpIR *Collector::middleIR = NULL;
+SharpIR *Collector::topIR = NULL;
 CollectorState Collector::collectorState = OFF;
 
 Collector::Collector( )
 {
 	grabber = new Victor(COLLECTOR_GRABBER_CHANNEL);
 	lifter = new Victor(COLLECTOR_LIFTER_CHANNEL);
-	frontIR = new Sharp_IR(1, IR_FRONT_DIO , COLLECTOR_FRONT_SIGNAL_VOLTAGE);
-	middleIR = new Sharp_IR(1, IR_MIDDLE_DIO, COLLECTOR_MIDDLE_SIGNAL_VOLTAGE);
-	topIR = new Sharp_IR(1, IR_TOP_DIO , COLLECTOR_TOP_SIGNAL_VOLTAGE);
+	frontIR = new SharpIR(1, IR_FRONT_CHANNEL , COLLECTOR_FRONT_SIGNAL_VOLTAGE);
+	middleIR = new SharpIR(1, IR_MIDDLE_CHANNEL, COLLECTOR_MIDDLE_SIGNAL_VOLTAGE);
+	topIR = new SharpIR(1, IR_TOP_CHANNEL , COLLECTOR_TOP_SIGNAL_VOLTAGE);
 	collectorState = OFF;
 	collectorTask = new Task("2502Cl",(FUNCPTR)ThreadLoop);
-	strike1 = new Relay(RAMP_LEFT_SPIKE);
-	strike2 = new Relay(RAMP_RIGHT_SPIKE);
+	strike1 = new Relay(RAMP_LEFT_SPIKE_CHANNEL);
+	strike2 = new Relay(RAMP_RIGHT_SPIKE_CHANNEL);
 }
 
 Collector::~Collector()

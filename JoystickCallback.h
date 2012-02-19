@@ -17,18 +17,18 @@ public:
 	JoystickCallback(JoystickWrapper* joystick, T *object) :
 		jwrapper(joystick),object(object)
 		{
-		this->buttonCount = 12;
-		this->downCallback = new ObjectFuncPtr[buttonCount];
-		this->heldCallback = new ObjectFuncPtr[buttonCount];
-		this->upCallback = new ObjectFuncPtr[buttonCount];
-		this->buttonStates = new bool[buttonCount];
-		for( int i = 0; i < buttonCount; i++ )
-		{
-			this->downCallback[i] = 0;
-			this->heldCallback[i] = 0;
-			this->upCallback[i] = 0;
-			this->buttonStates[i] = joystick->GetJoystick()->GetRawButton(i);
-		}
+			this->buttonCount = 12;
+			this->downCallback = new ObjectFuncPtr[buttonCount];
+			this->heldCallback = new ObjectFuncPtr[buttonCount];
+			this->upCallback = new ObjectFuncPtr[buttonCount];
+			this->buttonStates = new bool[buttonCount];
+			for( int i = 0; i < buttonCount; i++ )
+			{
+				this->downCallback[i] = 0;
+				this->heldCallback[i] = 0;
+				this->upCallback[i] = 0;
+				this->buttonStates[i] = joystick->GetJoystick()->GetRawButton(i);
+			}
 		}
 
 	~JoystickCallback()

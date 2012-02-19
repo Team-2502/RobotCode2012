@@ -11,14 +11,7 @@ class DriverStationLCD;
 class Display
 {
 public:
-	/**
-	 * Constructor.
-	 */
 	Display();
-	
-	/**
-	 * Destructor.
-	 */
 	~Display();
 	
 	/**

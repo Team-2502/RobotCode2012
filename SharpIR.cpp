@@ -1,13 +1,13 @@
 #include <WPILib.h>
-#include "Sharp_IR.h"
+#include "SharpIR.h"
 
-Sharp_IR::Sharp_IR(UINT8 moduleNumber, UINT32 channel, double signalVoltage) :
+SharpIR::SharpIR(UINT8 moduleNumber, UINT32 channel, double signalVoltage) :
 	AnalogChannel(moduleNumber, channel)
 {
 	this->signalVoltage = signalVoltage;
 }
 
-bool Sharp_IR::Get() 
+bool SharpIR::Get() 
 { 
 	return GetVoltage() > signalVoltage; 
 }

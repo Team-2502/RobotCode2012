@@ -7,15 +7,15 @@
 #include "Singleton.h"
 #include "squarefinder.h"
 #include <time.h>
-#include "Sharp_IR.h"
+#include "SharpIR.h"
 
 Robot::Robot()
 {
 	GetWatchdog().SetEnabled(false);
 
 	Logger* logger = new Logger("/ni-rt/system/logs/robot.txt");
-	vs = new VisionSystem(new SquareFinder);
-	vs->start();
+	vision = new Vision(new SquareFinder);
+	vision->start();
 	Singleton<Display>::SetInstance(new Display);
 	Singleton<Logger>::SetInstance(logger);
 	Singleton<DriveTrain>::SetInstance(new DriveTrain);
@@ -24,24 +24,24 @@ Robot::Robot()
 
 	Singleton<Logger>::GetInstance().Logf("Starting the Robot class.");
 
-	//accel = new AccelPID_Wrapper(new ADXL345_I2C(1)); //Takes ownership of ADXL345
+	//balanceAccelerometer = new AccelPID_Wrapper(new ADXL345_I2C(1)); //Takes ownership of ADXL345
 
-	//pid = new PIDController(0.1,.01,0.0,accel,&Singleton<DriveTrain>::GetInstance()); //\todo Tune these! No D.
-	//pid->Disable();
+	//balancePID = new PIDController(0.1,.01,0.0,balanceAccelerometer,&Singleton<DriveTrain>::GetInstance()); //\todo Tune these! No D.
+	//balancePID->Disable();
 
 	//gyro = new Gyro(1);
 	//gyro->Reset();
 
 	joystick1 = new JoystickWrapper(1, Extreme3DPro);
 	//joystick2 = new JoystickWrapper(2, Attack3);
-	jc = new JoystickCallback<Robot>(joystick1,this);
-	jc->SetHeldCallback(5, GET_FUNC(RampDown));
-	jc->SetHeldCallback(3, GET_FUNC(RampUp));
-	jc->SetHeldCallback(6, GET_FUNC(CollectorEject));
-	jc->SetUpCallback(5, GET_FUNC(RampOff));
-	jc->SetUpCallback(3, GET_FUNC(RampOff));
-	//jc->SetDownCallback(BalanceRobot,GET_FUNC(balanceRobotOn));
-	//jc->SetUpCallback(BalanceRobot,GET_FUNC(balanceRobotOff));
+	joystickCallbackHandler = new JoystickCallback<Robot>(joystick1,this);
+	joystickCallbackHandler->SetHeldCallback(RAMP_DOWN_BUTTON, GET_FUNC(RampDown));
+	joystickCallbackHandler->SetHeldCallback(RAMP_UP_BUTTON, GET_FUNC(RampUp));
+	joystickCallbackHandler->SetHeldCallback(EJECT_BALLS_BUTTON, GET_FUNC(CollectorEject));
+	joystickCallbackHandler->SetUpCallback(RAMP_DOWN_BUTTON, GET_FUNC(RampOff));
+	joystickCallbackHandler->SetUpCallback(RAMP_UP_BUTTON, GET_FUNC(RampOff));
+	//joystickCallbackHandler->SetDownCallback(BalanceRobot,GET_FUNC(BalanceRobotOn));
+	//joystickCallbackHandler->SetUpCallback(BalanceRobot,GET_FUNC(BalanceRobotOff));
 }
 //Robot used to be 5200B processor.
 Robot::~Robot()
@@ -53,8 +53,8 @@ Robot::~Robot()
 	Singleton<DriveTrain>::DestroyInstance();
 	Singleton<Logger>::DestroyInstance();
 	
-	//delete pid;
-	//delete accel;
+	//delete balancePID;
+	//delete balanceAccelerometer;
 }
 
 void Robot::RampDown()
@@ -98,7 +98,7 @@ void Robot::OperatorControl()
 {
 	DriveTrain& driveTrain = Singleton<DriveTrain>::GetInstance();
 	Singleton<Logger>::GetInstance().Logf("Starting operator control.");
-//	Sharp_IR *irTest = new Sharp_IR( 1, 5, COLLECTOR_FRONT_SIGNAL_VOLTAGE);
+//	SharpIR *irTest = new SharpIR( 1, 5, COLLECTOR_FRONT_SIGNAL_VOLTAGE);
 	
 	while(IsOperatorControl())
 	{
@@ -116,7 +116,7 @@ void Robot::OperatorControl()
 //		Singleton<Display>::GetInstance().PrintfLine(3, "Ball: %i", irTest->Get());
 //		Singleton<Display>::GetInstance().PrintfLine(4, "Ball: %f", irTest->GetVoltage());
 		
-		jc->Update();
+		joystickCallbackHandler->Update();
 		Singleton<Display>::GetInstance().Update();
 		
 		Wait(0.01);
@@ -124,15 +124,15 @@ void Robot::OperatorControl()
 	Singleton<Logger>::GetInstance().Logf("Stopping operator control.");
 }
 
-void Robot::balanceRobotOff()
+void Robot::BalanceRobotOff()
 {
-	pid->Disable();
+	balancePID->Disable();
 }
 
-void Robot::balanceRobotOn()
+void Robot::BalanceRobotOn()
 {
-	pid->Enable();
-	pid->SetSetpoint(0.0);
+	balancePID->Enable();
+	balancePID->SetSetpoint(0.0);
 }
 
 START_ROBOT_CLASS(Robot)

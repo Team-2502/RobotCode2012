@@ -7,7 +7,7 @@
 #include "LSM303_I2C.h"
 #define GET_FUNC(x) &Robot::x
 
-class VisionSystem;
+class Vision;
 
 class AccelPID_Wrapper : public PIDSource
 {
@@ -27,45 +27,26 @@ private:
 class Robot : public SimpleRobot
 {
 public:
-	/**
-	 * Constructor.
-	 */
 	Robot();
-	
-	/**
-	 * Destructor.
-	 */
 	~Robot();
-	
-	/**
-	 * Method for operations during autonomous mode.
-	 */
 	void Autonomous();
-	
-	/**
-	 * Method for teleop mode.
-	 */
 	void OperatorControl();
 	
 private:
-	void balanceRobotOff();
-	void balanceRobotOn();
+	void BalanceRobotOff();
+	void BalanceRobotOn();
 	void RampDown();
 	void RampUp();
 	void CollectorEject();
 	void RampOff();
 	
-	enum ButtonMappings { BalanceRobot = 1 };
-	
-	AccelPID_Wrapper *accel;
-	VisionSystem *vs;
-	Gyro *gyro;
-	
-	PIDController *pid;
-	
-	JoystickCallback<Robot> *jc;
-	JoystickWrapper *joystick1;
-	JoystickWrapper *joystick2;
+	AccelPID_Wrapper*			balanceAccelerometer;
+	Vision*						vision;
+	Gyro*						gyro;
+	PIDController*				balancePID;
+	JoystickCallback<Robot>*	joystickCallbackHandler;
+	JoystickWrapper*			joystick1;
+	JoystickWrapper*			joystick2;
 };
 
 #endif // ROBOT_H

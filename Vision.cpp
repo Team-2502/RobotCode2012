@@ -7,17 +7,17 @@
 #include "Singleton.h"
 #include "Vision.h"
 
-AxisCamera *VisionSystem::cam = NULL;
-VisionSpecifics *VisionSystem::engine = NULL;
-int VisionSystem::bestTargetCount = 0;
-TargetReport VisionSystem::bestTargets[] = {0, 0, 0, 0};
+AxisCamera *Vision::cam = NULL;
+VisionSpecifics *Vision::engine = NULL;
+int Vision::bestTargetCount = 0;
+TargetReport Vision::bestTargets[] = {0, 0, 0, 0};
 
 static double GetDistanceFromHeight(double realHeight, double imageHeight)
 {
 	return (realHeight / imageHeight) * CAMERA_FOCAL_LENGTH;
 }
 
-VisionSystem::VisionSystem(VisionSpecifics *backend)
+Vision::Vision(VisionSpecifics *backend)
 {
 	engine = backend;
 	cam = &AxisCamera::GetInstance("10.25.2.11");
@@ -26,24 +26,24 @@ VisionSystem::VisionSystem(VisionSpecifics *backend)
 	visionTask = new Task("2502Vn",(FUNCPTR)loop);
 }
 
-VisionSystem::~VisionSystem()
+Vision::~Vision()
 {
 	delete engine;
 	visionTask->Stop();
 	delete visionTask;
 }
 
-void VisionSystem::start()
+void Vision::start()
 {
 	visionTask->Start();
 }
 
-void VisionSystem::stop()
+void Vision::stop()
 {
 	visionTask->Stop();
 }
 
-void VisionSystem::loop()
+void Vision::loop()
 {
 	while(true)
 	{
@@ -55,12 +55,12 @@ void VisionSystem::loop()
 	}
 }
 
-bool* VisionSystem::GetTargetCase(TargetReport* targets, int targetCount)
+bool* Vision::GetTargetCase(TargetReport* targets, int targetCount)
 {
 	return NULL;
 }
 
-void VisionSystem::FindTarget(double& offset, double& distance, int& targetLevel)
+void Vision::FindTarget(double& offset, double& distance, int& targetLevel)
 {
 	targetLevel = 0;
 	distance = 0.0;

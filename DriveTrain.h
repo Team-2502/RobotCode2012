@@ -17,14 +17,7 @@ enum DriveType {
 class DriveTrain : public PIDOutput
 {
 public:
-	/**
-	 * Constructor.
-	 */
 	DriveTrain();
-	
-	/**
-	 * Destructor.
-	 */
 	virtual ~DriveTrain();
 	
 	void PIDWrite(float output) { DriveTank(output,output); }

@@ -3,7 +3,7 @@
 
 #include <WPILib.h>
 #include "Constants.h"
-#include "Sharp_IR.h"
+#include "SharpIR.h"
 
 enum CollectorState
 {
@@ -40,9 +40,9 @@ private:
 	static unsigned balls;
 	static Victor *grabber;
 	static Victor *lifter;
-	static Sharp_IR *frontIR;
-	static Sharp_IR *middleIR;
-	static Sharp_IR *topIR;
+	static SharpIR *frontIR;
+	static SharpIR *middleIR;
+	static SharpIR *topIR;
 	Task *collectorTask;
 	Relay *strike1;
 	Relay *strike2;
