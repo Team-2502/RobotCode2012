@@ -1,13 +1,11 @@
 #include <WPILib.h>
 #include "nivision.h"
 #include <cmath>
-#include "vision.h"
-#include "Singleton.h"
-#include "Display.h"
 
-///@todo move constants to Constants.h
-const unsigned BASKET_BACKBOARD_HEIGHT = 22.0 / 12.0;
-const double CAMERA_FOCAL_LENGTH = 100.0; ///@todo this needs to be determined experimentally
+#include "Constants.h"
+#include "Display.h"
+#include "Singleton.h"
+#include "Vision.h"
 
 AxisCamera *VisionSystem::cam = NULL;
 VisionSpecifics *VisionSystem::engine = NULL;
@@ -57,6 +55,11 @@ void VisionSystem::loop()
 	}
 }
 
+bool* VisionSystem::GetTargetCase(TargetReport* targets, int targetCount)
+{
+	return NULL;
+}
+
 void VisionSystem::FindTarget(double& offset, double& distance, int& targetLevel)
 {
 	targetLevel = 0;
@@ -75,7 +78,7 @@ void VisionSystem::FindTarget(double& offset, double& distance, int& targetLevel
 		targetLevel = 3;
 		
 		double realHeight = BASKET_3_ELEVATION - BASKET_1_ELEVATION;
-		distance = GetDistanceFromHeight(realHeight, bestTargets[0].normalizedHeight)
+		distance = GetDistanceFromHeight(realHeight, bestTargets[0].normalizedHeight);
 	}
 	else if( targetCase[0] && (targetCase[1] || targetCase[2]) )
 	{
@@ -86,7 +89,7 @@ void VisionSystem::FindTarget(double& offset, double& distance, int& targetLevel
 		double realHeight = BASKET_3_ELEVATION - BASKET_2_ELEVATION;
 		distance = GetDistanceFromHeight(realHeight, bestTargets[0].normalizedHeight);
 	}
-	else if( targetCase[3] && (targetCase[1] || targetCase[2] )
+	else if( targetCase[3] && (targetCase[1] || targetCase[2]) )
 	{
 		//One of the bottom diagonals
 		offset = bestTargets[3].normalized_x;

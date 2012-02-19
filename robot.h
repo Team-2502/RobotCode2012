@@ -50,8 +50,11 @@ public:
 private:
 	void balanceRobotOff();
 	void balanceRobotOn();
+	void RampDown();
+	void RampUp();
+	void CollectorEject();
+	void RampOff();
 	
-private:
 	enum ButtonMappings { BalanceRobot = 1 };
 	
 	AccelPID_Wrapper *accel;

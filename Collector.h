@@ -2,6 +2,7 @@
 #define COLLECTOR_H
 
 #include <WPILib.h>
+#include "Constants.h"
 #include "Sharp_IR.h"
 
 enum CollectorState
@@ -13,34 +14,38 @@ enum CollectorState
 	PREPARE_TO_SHOOT,
 	SHOOTING
 };
+
+enum RampState
+{
+	RAMP_OFF,
+	UP,
+	DOWN
+};
 	
-#define BLOCKED 1
-#define OPEN 0
-#define MAX_BALLS 2
-#define RUNFAST .5
-#define RUNSLOW .2
-#define STOP 0
 
 class Collector
 {
 public:
-	Collector(int bottomChannel, int middleChannel, int frontIRChannel, int middleIRChannel, int topIRChannel, int numberOfBalls);
+	Collector();
 	~Collector();
 	
 	void Shoot();
-	void ManipulateRamp();
+	void ManipulateRamp(RampState state);
 	void Stop();
 	void Eject();
-	void RunCollector();
+	void Start();
+	static void SetBallCount( int balls );
 	
 private:
-	static int balls;
+	static unsigned balls;
 	static Victor *grabber;
 	static Victor *lifter;
 	static Sharp_IR *frontIR;
 	static Sharp_IR *middleIR;
 	static Sharp_IR *topIR;
 	Task *collectorTask;
+	Relay *strike1;
+	Relay *strike2;
 	static CollectorState collectorState;
 	static void ThreadLoop();
 	static void RejectBall();

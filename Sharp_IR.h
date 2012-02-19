@@ -5,9 +5,11 @@
 
 class Sharp_IR : public AnalogChannel
 {
+private:
+	double signalVoltage;
 public:
-	Sharp_IR(UINT8 moduleNumber, UINT32 channel) : AnalogChannel(moduleNumber, channel) {}
-	bool Get() { return GetVoltage() > 2.5; } //Experimentally determined.
+	Sharp_IR(UINT8 moduleNumber, UINT32 channel, double signalVoltage);
+	bool Get();
 	
 };
 

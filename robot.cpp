@@ -1,3 +1,4 @@
+#include "Collector.h"
 #include "Display.h"
 #include "DriveTrain.h"
 #include "JoystickWrapper.h"
@@ -18,21 +19,29 @@ Robot::Robot()
 	Singleton<Display>::SetInstance(new Display);
 	Singleton<Logger>::SetInstance(logger);
 	Singleton<DriveTrain>::SetInstance(new DriveTrain);
+	Singleton<Collector>::SetInstance( new Collector );
+	Singleton<Collector>::GetInstance().Start();
+
 	Singleton<Logger>::GetInstance().Logf("Starting the Robot class.");
 
-	accel = new AccelPID_Wrapper(new ADXL345_I2C(1)); //Takes ownership of ADXL345
+	//accel = new AccelPID_Wrapper(new ADXL345_I2C(1)); //Takes ownership of ADXL345
 
-	pid = new PIDController(0.1,.01,0.0,accel,&Singleton<DriveTrain>::GetInstance()); //\todo Tune these! No D.
-	pid->Disable();
+	//pid = new PIDController(0.1,.01,0.0,accel,&Singleton<DriveTrain>::GetInstance()); //\todo Tune these! No D.
+	//pid->Disable();
 
-	gyro = new Gyro(1);
-	gyro->Reset();
+	//gyro = new Gyro(1);
+	//gyro->Reset();
 
 	joystick1 = new JoystickWrapper(1, Extreme3DPro);
 	//joystick2 = new JoystickWrapper(2, Attack3);
 	jc = new JoystickCallback<Robot>(joystick1,this);
-	jc->SetDownCallback(BalanceRobot,GET_FUNC(balanceRobotOn));
-	jc->SetUpCallback(BalanceRobot,GET_FUNC(balanceRobotOff));
+	jc->SetHeldCallback(5, GET_FUNC(RampDown));
+	jc->SetHeldCallback(3, GET_FUNC(RampUp));
+	jc->SetHeldCallback(6, GET_FUNC(CollectorEject));
+	jc->SetUpCallback(5, GET_FUNC(RampOff));
+	jc->SetUpCallback(3, GET_FUNC(RampOff));
+	//jc->SetDownCallback(BalanceRobot,GET_FUNC(balanceRobotOn));
+	//jc->SetUpCallback(BalanceRobot,GET_FUNC(balanceRobotOff));
 }
 //Robot used to be 5200B processor.
 Robot::~Robot()
@@ -48,9 +57,35 @@ Robot::~Robot()
 	//delete accel;
 }
 
+void Robot::RampDown()
+{
+	Singleton<Display>::GetInstance().PrintfLine(5, "Ramp Going Down");
+	//Singleton<Collector>::GetInstance().ManipulateRamp(DOWN);
+}
+
+void Robot::RampUp()
+{
+	Singleton<Display>::GetInstance().PrintfLine(5, "Ramp Going Up");
+	//Singleton<Collector>::GetInstance().ManipulateRamp(UP);
+}
+
+void Robot::RampOff()
+{
+	Singleton<Display>::GetInstance().PrintfLine(5, "Ramp Turning Off");
+	//Singleton<Collector>::GetInstance().ManipulateRamp(RAMP_OFF);
+}
+
+void Robot::CollectorEject()
+{
+	Singleton<Display>::GetInstance().PrintfLine(5, "Ejecting Ball");
+	//Singleton<Collector>::GetInstance().Eject();
+}
+
 void Robot::Autonomous()
 {
 	Singleton<Logger>::GetInstance().Logf("Starting Autonomous Mode.");
+	Singleton<Collector>::GetInstance().SetBallCount( 2 );  // preloaded with 2 balls in autonomous
+
 	while ( IsAutonomous() )
 	{
 		///\todo Implement this!
@@ -63,7 +98,7 @@ void Robot::OperatorControl()
 {
 	DriveTrain& driveTrain = Singleton<DriveTrain>::GetInstance();
 	Singleton<Logger>::GetInstance().Logf("Starting operator control.");
-	Sharp_IR *irTest = new Sharp_IR( 1, 5);
+//	Sharp_IR *irTest = new Sharp_IR( 1, 5, COLLECTOR_FRONT_SIGNAL_VOLTAGE);
 	
 	while(IsOperatorControl())
 	{
@@ -78,9 +113,10 @@ void Robot::OperatorControl()
 		Singleton<Display>::GetInstance().PrintfLine(0, "X: %f", x);
 		Singleton<Display>::GetInstance().PrintfLine(1, "Y: %f", y);
 		Singleton<Display>::GetInstance().PrintfLine(2, "R: %f", rot);
-		Singleton<Display>::GetInstance().PrintfLine(3, "Ball: %i", irTest->Get());
+//		Singleton<Display>::GetInstance().PrintfLine(3, "Ball: %i", irTest->Get());
+//		Singleton<Display>::GetInstance().PrintfLine(4, "Ball: %f", irTest->GetVoltage());
 		
-		//jc->Update();
+		jc->Update();
 		Singleton<Display>::GetInstance().Update();
 		
 		Wait(0.01);
