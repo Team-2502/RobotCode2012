@@ -2,7 +2,10 @@
 #include <algorithm>
 #include <vector>
 #include <cmath>
-#include "squarefinder.h"
+#include "SquareFinder.h"
+
+#include "Display.h"
+#include "Singleton.h"
 
 SquareFinder::SquareFinder()
 {
@@ -16,22 +19,18 @@ SquareFinder::~SquareFinder()
 
 void SquareFinder::GetBestTargets(HSLImage *img, TargetReport* targets, int& count)
 {
-    count = 0;
-    TargetReport* reportsArray = targets;
-	TargetReport& ret2 = reportsArray[0];
+	count = 0;
+	TargetReport& ret2 = targets[0];
 	ret2.x = 1337.0; //error code
 	ret2.y = 0;
 	if(!img)
-	{
 		return;
-	}
 	ret2.x = 1338.0;
 
 	int height = img->GetHeight();
 	int width = img->GetWidth();
 	Image *image = img->GetImaqImage();
 	//Parameter, Lower, Upper, Calibrated?, Exclude?
-	//ParticleFilterCriteria2 particleCriteria[1] = { {IMAQ_MT_AREA,500,2000,0,0} };
 	ParticleFilterCriteria2 particleCriteria_initial[1] = { {IMAQ_MT_AREA_BY_IMAGE_AREA,25,100,0,1} };
 	ParticleFilterCriteria2 particleCriteria[1] = { {IMAQ_MT_RATIO_OF_EQUIVALENT_RECT_SIDES,1,2,0,0} };
 	ParticleFilterOptions particleFilterOptions[1] = { {FALSE,0,FALSE} };
@@ -64,7 +63,7 @@ void SquareFinder::GetBestTargets(HSLImage *img, TargetReport* targets, int& cou
 				imaqMeasureParticle(image,i,FALSE,IMAQ_MT_BOUNDING_RECT_HEIGHT,&h);
 				imaqMeasureParticle(image,i,FALSE,IMAQ_MT_BOUNDING_RECT_WIDTH,&w);
 				imaqMeasureParticle(image,i,FALSE,IMAQ_MT_AREA,&area);
-				if(area/(w*h) > 0.0) {
+				if(area/(w*h) > 0.8) {
 					ret.height = h;
 					ret.width  = w;
 					ret.size = area;
@@ -76,22 +75,24 @@ void SquareFinder::GetBestTargets(HSLImage *img, TargetReport* targets, int& cou
 					ret.normalized_y = (-1.0+2.0*((ret.normalized_y)/height));
 					ret.normalizedWidth = (w / width);
 					ret.normalizedHeight = (h / height);
-					ret.distance = 732.7079220552562/w; //Approximates distance using lens optics.
+					//ret.distance = 705.178571429 / h; //In feet.
+					ret.distance = 752.746418773 / h; //In feet.
 					reports.push_back(ret);
 				}
 			}
 		}
 	}
+	
 	sort(reports.begin(),reports.end());
 
-	if(reports.size())
-    {
-        count = reports.size() >= 4 ? 4 : reports.size();
-        unsigned i = 0;
-        for(vector<TargetReport>::iterator it = reports.begin(); it != reports.end(); ++it)
-        {
-            reportsArray[i++] = (*it);
-        }
-    }
+	if(reports.size()) {
+		count = reports.size() >= 4 ? 4 : reports.size();
+		unsigned i = 0;
+		for(vector<TargetReport>::iterator it = reports.begin(); it != reports.end(); ++it) {
+			targets[i++] = (*it);
+		}
+	} else {
+		targets[0].distance = 0;
+	}
 }
 

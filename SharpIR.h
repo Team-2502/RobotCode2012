@@ -5,12 +5,14 @@
 
 class SharpIR : public AnalogChannel
 {
+public:
+	SharpIR(UINT8 moduleNumber, UINT32 channel, double signalVoltage, unsigned signalToggleCount );
+	bool Get();
+
 private:
 	double signalVoltage;
-public:
-	SharpIR(UINT8 moduleNumber, UINT32 channel, double signalVoltage);
-	bool Get();
-	
+	unsigned signalToggleCount;
+	unsigned currentCount;
 };
 
 #endif

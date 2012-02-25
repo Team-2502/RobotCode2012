@@ -39,8 +39,8 @@ int round(float d, int pos = 1) {
 
 void DriveTrain::DriveArcade(double x, double y)
 {
-	left->Set(-y-x);
-	right->Set(-y+x);
+	left->Set(-y+x);
+	right->Set(y+x);
 }
 
 void DriveTrain::DriveTank(double leftChannel, double rightChannel)

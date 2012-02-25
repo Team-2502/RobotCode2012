@@ -3,6 +3,7 @@
 
 #include "vision.h"
 
+
 class SquareFinder : public VisionSpecifics
 {
 public:

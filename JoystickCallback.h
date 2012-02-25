@@ -51,6 +51,11 @@ public:
 		this->heldCallback[button] = fptr;
 	}
 
+	void SetTriggerDownCallback( ObjectFuncPtr fptr )
+	{
+		this->downCallback[1] = fptr;
+	}
+	
 	void SetUpCallback(int button, ObjectFuncPtr fptr)
 	{
 		this->upCallback[button] = fptr;
@@ -67,6 +72,7 @@ public:
 
 	void Update()
 	{
+		// deal with the buttons
 		for( int i = 0; i < buttonCount; i++ )
 		{
 			bool state = this->buttonStates[i];

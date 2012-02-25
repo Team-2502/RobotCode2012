@@ -39,6 +39,9 @@ private:
 	void RampUp();
 	void CollectorEject();
 	void RampOff();
+	void ShootBasket();
+	void MoveTurret();
+	void TurretOff();
 	
 	AccelPID_Wrapper*			balanceAccelerometer;
 	Vision*						vision;

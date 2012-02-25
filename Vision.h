@@ -15,7 +15,7 @@ struct TargetReport
 	double normalizedWidth;
 	double normalizedHeight;
 	double distance; //ft
-	bool operator<(TargetReport &rhs) {return size < rhs.size;}
+	bool operator<(TargetReport &rhs) {return size > rhs.size;}
 };
 
 class VisionSpecifics
@@ -42,7 +42,9 @@ public:
      * \param targetLevel the height level of the target.
      */
     void FindTarget(double& offset, double& distance, int& targetLevel);
-	
+    
+    TargetReport GetBestTarget() const { return bestTargets[0]; }
+    
 private:
 	static void loop();
     bool* GetTargetCase(TargetReport* targets, int targetCount);
