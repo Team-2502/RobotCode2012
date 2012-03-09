@@ -233,9 +233,21 @@ void Collector::ThreadLoop()
 
 		case SHOOTING:
 			lifter->Set( COLLECTOR_RUNSLOW );
-			Wait( 3 );  // TODO FIGURE OUT HOW LONG TO WAIT FOR ALL BALLS TO FLY
-			lifter->Set( COLLECTOR_RUNFAST );
-			Wait( .5 );
+			
+			//This ensures that only one ball can be shot at once
+			for( unsigned i = 0; i < 3000; ++i )
+			{
+				Wait(0.001);
+				if( topIR->Get() != BALL_NOT_VISIBLE )
+					break;
+			}
+			for( unsigned i = 0; i < 3000; ++i )
+			{
+				Wait(0.001);
+				if( topIR->Get() != BALL_VISIBLE )
+					break;
+			}
+			
 			grabber->Set(COLLECTOR_STOP);
 			lifter->Set(COLLECTOR_STOP);
 			balls = 0;
@@ -251,7 +263,6 @@ void Collector::ThreadLoop()
 			balls = 0;
 			collectorState = LOOKING_FOR_BALLS;
 			break;
-			
 		}
 	}	
 }

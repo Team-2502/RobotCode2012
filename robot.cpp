@@ -105,6 +105,7 @@ void Robot::OperatorControl()
 	Singleton<Logger>::GetInstance().Logf("Starting operator control.");
 	int count = 0;
 	
+	__UNUSED(count)
 	__UNUSED(driveTrain)
 	
 	while(IsOperatorControl())
@@ -113,7 +114,7 @@ void Robot::OperatorControl()
 		joystick1->GetAxis(&x,&y);
 		rot = -joystick1->GetRawRotation();
 
-		driveTrain.DriveArcade(rot, y);
+		driveTrain.DriveArcade(rot, tanFilter(y));
 		Singleton<Display>::GetInstance().Clear();
 	
 		//Singleton<Display>::GetInstance().PrintfLine(0, "X: %f", x);
@@ -133,6 +134,7 @@ void Robot::OperatorControl()
 */
 		joystickCallbackHandler->Update();
 		Singleton<Display>::GetInstance().Update();
+		Singleton<Shooter>::GetInstance().Update();
 		
 		Wait(0.01);
 	}

@@ -36,4 +36,6 @@ double radToDeg(double radians);
  */
 void rotate(double x, double y, double angle, double* rx, double* ry);
 
+double tanFilter(double x);
+
 #endif // MATH_H

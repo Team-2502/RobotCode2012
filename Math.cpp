@@ -17,3 +17,9 @@ void rotate(double x, double y, double angle, double* rx, double* ry)
 	*rx = x * std::cos(angle) - y * std::sin(angle);
 	*ry = x * std::sin(angle) + y * std::cos(angle);
 }
+
+double tanFilter(double x)
+{
+	static const double t21 = tan(PI / 2.1);
+	return tan(x * PI / 2.1) / t21;
+}

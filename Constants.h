@@ -83,7 +83,8 @@ const double   COLLECTOR_TOP_SIGNAL_VOLTAGE 				= 2.0;
 const unsigned COLLECTOR_FRONT_SIGNAL_TOGGLE_COUNT			= 40; 
 const unsigned COLLECTOR_FRONT_MIDDLE_SIGNAL_TOGGLE_COUNT	= 40; 
 const unsigned COLLECTOR_MIDDLE_SIGNAL_TOGGLE_COUNT			= 10; 
-const unsigned COLLECTOR_TOP_SIGNAL_TOGGLE_COUNT			= 20; 
+const unsigned COLLECTOR_TOP_SIGNAL_TOGGLE_COUNT			= 20;
+const unsigned COLLECTOR_WAIT_TIME							= 3000;
 
 // Button Mappings
 const unsigned TURRET_BUTTON					= 2;

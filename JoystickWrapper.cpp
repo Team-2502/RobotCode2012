@@ -102,9 +102,7 @@ void JoystickWrapper::GetAxis(float* xaxis, float* yaxis) const
 	//*yaxis = sin(angle) * magnitude;
 	
 	GetRawAxis(xaxis,yaxis);
-	
-	*xaxis = *xaxis * *xaxis * *xaxis;
-	*yaxis = *yaxis * *yaxis * *yaxis;
+
 	//*xaxis = ((*xaxis < 0.0) ? -1.0 : 1.0) * (exp(fabs(*xaxis))-1)/(exp(1)-1.0);
 	//*yaxis = ((*yaxis < 0.0) ? -1.0 : 1.0) * (exp(fabs(*yaxis))-1)/(exp(1)-1.0);
 }

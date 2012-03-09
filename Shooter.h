@@ -24,6 +24,7 @@ public:
 	void Update();
 	
 private:
+	double turretDirection;
 	Jaguar* 		bottomJag;
 	Jaguar* 		topJag;
 	PIDController*	bottomPID;
@@ -33,7 +34,6 @@ private:
 	Encoder*		turretEncoder;
 	Victor* 		turretVictor;
 	SharpIR*		turretIR;
-	int				turretPosition;
 };
 
 #endif // SHOOTER_H

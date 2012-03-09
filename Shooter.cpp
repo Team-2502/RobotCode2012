@@ -32,7 +32,8 @@ static double GetShootVelocity(double distance, double elevation, double shootAn
 	return rootG * fabs(distance + variance)/ sqrt(fabs(cosAngle*elevation+elevation-sinAngle*distance-variance*sinAngle));
 }
 
-Shooter::Shooter()
+Shooter::Shooter() :
+		turretDirection(0.0)
 {
 	Singleton<Logger>::GetInstance().Logf("Shooter: Starting up...");
 	//Setup Jaguars
@@ -148,9 +149,14 @@ void Shooter::MoveTurret(TurretDirection direction)
 
 void Shooter::SetTurret(double direction)
 {
-	double rotation = turretEncoder->GetDistance(); // This is in degrees left/right
-	__UNUSED(rotation);
-	///\todo limit rotation
+	turretDirection = direction;
 	this->turretVictor->Set( -1.0 * direction );
-	Singleton<Display>::GetInstance().PrintfLine(5, "Turret:%f", direction);
+	Singleton<Display>::GetInstance().PrintfLine(5, "T:%f", direction);
+}
+
+void Shooter::Update()
+{
+	double rotation = turretEncoder->GetDistance();
+	if( (rotation < -90 && turretDirection < 0)  || (rotation > 90 && turretDirection > 0) )
+		SetTurret(0);
 }
