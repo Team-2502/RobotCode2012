@@ -3,6 +3,7 @@
 #include "Display.h"
 #include "Singleton.h"
 
+
 unsigned Collector::balls = 0;
 Victor *Collector::grabber = NULL;
 Victor *Collector::lifter = NULL;
